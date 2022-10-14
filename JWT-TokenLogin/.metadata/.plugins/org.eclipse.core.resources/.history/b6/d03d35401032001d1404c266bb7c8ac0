@@ -1,0 +1,67 @@
+package com.netprizm.app.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.netprizm.app.TieClass.TemplateRequestDto;
+import com.netprizm.app.entity.Template;
+import com.netprizm.app.io.dto.TemplateDto;
+import com.netprizm.app.service.impl.TemplateServiceImpl;
+
+
+@CrossOrigin
+@RestController
+@RequestMapping(value ="/temp")
+public class TemplateController {
+
+	@Autowired
+	private TemplateServiceImpl towerServiceImpl;
+  /*
+	@PostMapping
+	public ResponseEntity<?> createTower(@RequestBody TemplateRequestDto template)
+	{
+		towerServiceImpl.save(template);
+		System.out.println("enterd in controller");
+		return new  ResponseEntity<TemplateRequestDto> (template,HttpStatus.CREATED);
+
+	}
+	*/
+
+	@PostMapping
+	public ResponseEntity<?> createTower(@RequestBody TemplateDto template)
+	{
+		towerServiceImpl.saveDto(template);
+		System.out.println("enterd in controller");
+		return new  ResponseEntity<TemplateDto> (template,HttpStatus.CREATED);
+
+	}
+	@GetMapping
+	public ResponseEntity<List<Template>> getAllTemplate()
+	{
+		
+	
+		return ResponseEntity.ok(this.towerServiceImpl.getAllTemplate());
+	}
+	
+	@PutMapping
+	public ResponseEntity<?> updateTower(@RequestBody TemplateDto template)
+	{
+		towerServiceImpl.update(template);
+		System.out.println("enterd in controller");
+		return new  ResponseEntity<TemplateDto> (template,HttpStatus.CREATED);
+
+	}
+
+
+
+}

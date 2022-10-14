@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Ldap-login/src/main/resources/ldap-data.Idif&apos; to &apos;ldap-data.ldif&apos;" description="Rename resource &apos;ldap-data.Idif&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/resources/ldap-data.Idif" name="ldap-data.ldif" stamp="1659164383193" updateReferences="true"/>
+</session>

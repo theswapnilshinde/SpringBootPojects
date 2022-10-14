@@ -1,0 +1,165 @@
+package com.netprizm.app.service.impl;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+import com.google.gson.Gson;
+import com.netprizm.app.TieClass.TemplateRequestDto;
+import com.netprizm.app.entity.Template;
+import com.netprizm.app.entity.TowerData;
+import com.netprizm.app.io.dto.TemplateDto;
+import com.netprizm.app.io.dto.TowerDataDto;
+//import com.netprizm.app.entity.TowerRequestDto;
+import com.netprizm.app.repositary.TemplateRepo;
+import com.netprizm.app.responcesess.CallResponse;
+import com.netprizm.app.service.TemplateService;
+@Service
+public class  TemplateServiceImpl implements TemplateService   {
+	
+	@Autowired
+	private TemplateRepo templateRepo;
+    @Autowired
+	private ModelMapper modelMapper;
+	
+
+	@Override
+	public String CreateTemplate(com.netprizm.app.entity.Template template) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String save(TemplateRequestDto requestTemplate) {
+		Template template = new Template();
+		template.setName(requestTemplate.getName());
+		template.setTemplateId(requestTemplate.getTemplateId());
+		templateRepo.save(template);
+		System.out.println("enterd in service");
+		return "susccess";
+	}
+
+	@Override
+	public String deleteTowerData(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TemplateDto saveDto(TemplateDto templateDto) {
+		
+		Template template = new Template();
+	//	TowerData towerData = new TowerData();	
+//		for(TowerDataDto towerDataDto:templateDto.getTowers()) {
+//			towerData = mapTowerDataDtoToTowerData(towerDataDto,towerData);
+//		}
+//		//	System.out.println("Enterd in controllerImpl");
+		
+		template.setTemplateId(templateDto.getTemplateId());
+		template.setName(templateDto.getName());
+		//template.setTowers(templateDto.getTowers());
+		template.setTowers(templateDto.getTowers());
+		template.setUes(templateDto.getUes());
+		templateRepo.save(template);
+		return templateDto;
+		
+		//Template template = this.modelMapper.map(templateDto, Template.class);
+	//	Template saveTemplate = this.templateRepo.save(template);
+		//return this.modelMapper.map(saveTemplate, TemplateDto.class);
+		
+	}
+
+	private TowerData mapTowerDataDtoToTowerData(TowerDataDto towerDataDto, TowerData towerData) {
+		towerData.setCclId(towerDataDto.getCclId());
+		
+		
+		return towerData;
+	}
+
+	public List<Template> getAllTemplate() {
+		List<Template>  list=templateRepo.findAll();
+		return list;
+	}
+
+	public TemplateDto update(TemplateDto templateDto) {
+		
+		Template template = new Template(); 	
+       int templateId = templateDto.getTemplateId();
+		template= templateRepo.findAllBytemplateId(templateId);
+		
+		if(template != null)
+		{
+			System.out.println(templateId);
+			template.setTemplateId(templateDto.getTemplateId());
+			template.setName(templateDto.getName());
+			//template.setTowers(templateDto.getTowers());
+			template.setTowers(templateDto.getTowers());
+			template.setUes(templateDto.getUes());
+			templateRepo.save(template);
+			return templateDto;
+			
+		}
+		else
+		{
+			System.out.println("templateId Not Found");
+			
+		}
+		
+		return templateDto;
+		
+	}
+	
+public String delete(TemplateDto templateDto) {
+		
+		Template template = new Template(); 	
+       int templateId = templateDto.getTemplateId();
+		template= templateRepo.findAllBytemplateId(templateId);
+		
+		templateRepo.delete(template);
+		
+		
+		if (template ==null) {
+			String result = "success";
+			return result;
+		}
+		else {
+			String result = "Not Deleted";
+			return result;
+		}
+    }
+
+
+@Override
+public CallResponse saveResponce(TemplateDto templateDto) {
+	CallResponse callResponse = null;
+	try {
+	Template template = new Template();
+//	TowerData towerData = new TowerData();	
+//	for(TowerDataDto towerDataDto:templateDto.getTowers()) {
+//		towerData = mapTowerDataDtoToTowerData(towerDataDto,towerData);
+//	}
+//	//	System.out.println("Enterd in controllerImpl");
+	
+	template.setTemplateId(templateDto.getTemplateId());
+	template.setName(templateDto.getName());
+	//template.setTowers(templateDto.getTowers());
+	template.setTowers(templateDto.getTowers());
+	template.setUes(templateDto.getUes());
+	templateRepo.save(template);
+	callResponse =new CallResponse("Templat Created Success!",true);
+	}catch (Exception e) {
+		new CallResponse("Failed To Create New Template!",false);
+	}
+	return callResponse;
+	
+	//Template template = this.modelMapper.map(templateDto, Template.class);
+//	Template saveTemplate = this.templateRepo.save(template);
+	//return this.modelMapper.map(saveTemplate, TemplateDto.class);
+	
+}
+}

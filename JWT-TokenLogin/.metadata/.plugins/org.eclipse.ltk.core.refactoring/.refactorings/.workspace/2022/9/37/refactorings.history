@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;Netprizm-UE&apos;" deleteContents="true" description="Delete resource &apos;Netprizm-UE&apos;" element1="/Netprizm-UE" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1662447793035"/>
+</session>

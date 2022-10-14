@@ -1,0 +1,159 @@
+package com.example.ldap;
+
+import java.util.Properties;
+
+
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+
+
+
+@SpringBootApplication
+public class LdapConnectingApplication {
+	DirContext connetion;
+	
+	App Apps= new  App();
+	
+
+	public static void main(String[] args) throws NamingException {
+		SpringApplication.run(LdapConnectingApplication.class, args);
+
+		LdapConnectingApplication app = new LdapConnectingApplication();
+		app.newConnection();
+		app.getAllUsers();
+		app.getAllUserss();
+		app.searchUsers();
+		
+		//app.authUser("swapnil","1");
+		System.out.println(app.authUser("swapnil","1"));
+		
+		
+		
+	}
+	
+	public void getAllUsers() throws NamingException {
+		//System.out.println("enterd");
+		String  serchFilter = "(objectClass=intOrgPerson)";
+		String [] req = {"cn"};
+		SearchControls controls = new SearchControls();
+		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		controls.setReturningAttributes(req);
+		System.out.println("enterd");
+		NamingEnumeration user = connetion.search("ou=users,ou=system",serchFilter,controls);
+		
+		SearchResult result= null;
+		while(user.hasMore())
+		{
+			result = (SearchResult) user.next();
+			Attributes att = result.getAttributes();
+			System.out.println(att.get("cn"));
+			System.out.println("enterd");
+			
+	
+			
+			
+		}
+	}
+	
+	public void getAllUserss() throws NamingException {
+		String searchFilter = "(objectClass=inetOrgPerson)";
+		String[] reqAtt = { "cn", "sn" };
+		SearchControls controls = new SearchControls();
+		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		controls.setReturningAttributes(reqAtt);
+
+		NamingEnumeration users = connetion.search("ou=users,ou=system", searchFilter, controls);
+
+		SearchResult result = null;
+		while (users.hasMore()) {
+			result = (SearchResult) users.next();
+			Attributes attr = result.getAttributes();
+			String name = attr.get("cn").get(0).toString();
+			//deleteUserFromGroup(name,"Administrators");
+			System.out.println(attr.get("cn"));
+			System.out.println(attr.get("sn"));
+		}
+
+	}
+	public void newConnection() {
+		
+		System.out.println("hello world");
+		Properties env= new Properties();
+		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+		env.put(Context.PROVIDER_URL,"ldap://localhost:10380");
+		env.put(Context.SECURITY_PRINCIPAL, "uid=admin,ou=system");
+		env.put(Context.SECURITY_CREDENTIALS,"secret");
+		
+		try {
+			//DirContext connetion = new InitialDirContext(env);
+			 connetion = new InitialDirContext(env);
+			System.out.println("Connetd to server   "+connetion);
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Not  **** Connetd to server");
+			e.printStackTrace();
+		}
+	}
+	
+	public void searchUsers() throws NamingException {
+		//String searchFilter = "(uid=1)"; //  for one user
+		//String searchFilter = "(&(uid=1)(cn=Smith))"; // and condition 
+		String searchFilter = "(|(uid=1)(uid=2)(cn=swapnil))"; // or condition
+		String[] reqAtt = { "cn", "sn","uid" };
+		SearchControls controls = new SearchControls();
+		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		controls.setReturningAttributes(reqAtt);
+
+		NamingEnumeration users = connetion.search("ou=users,ou=system", searchFilter, controls);
+System.out.println("****************");
+		SearchResult result = null;
+		while (users.hasMore()) {
+			result = (SearchResult) users.next();
+			Attributes attr = result.getAttributes();
+			String name = attr.get("cn").get(0).toString();
+			//deleteUserFromGroup(name,"Administrators");
+			System.out.println(attr.get("cn"));
+			System.out.println(attr.get("sn"));
+			System.out.println(attr.get("uid"));
+		}
+
+	}
+	public static boolean authUser(String username, String password)
+	{
+		System.out.println("success");
+		try {
+			Properties env = new Properties();
+			env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+			env.put(Context.PROVIDER_URL, "ldap://localhost:10389");
+			System.out.println("success2");
+			env.put(Context.SECURITY_PRINCIPAL, "cn=swapnil,ou=users,ou=system");  //check the DN correctly
+			env.put(Context.SECURITY_CREDENTIALS, 1);
+			System.out.println("success3");
+//			DirContext con= new InitialDirContext(env);
+			DirContext connetion   = new InitialDirContext(env);
+			System.out.println("success");
+			//con.close();
+			System.out.println("success");
+			return true;
+			
+		}catch (Exception e) {
+			System.out.println("failed: "+e.getMessage());
+			return false;
+		}
+	}
+	
+	
+	
+
+}
